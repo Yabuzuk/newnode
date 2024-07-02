@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Форма отправки данных о грузоперевозках</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Общие стили CSS */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f6f7; /* Фоновый цвет, как в Telegram */
+      color: #2c3e50; /* Цвет текста */
+      margin: 0;
+      padding: 20px;
+      width: 340px; /* Фиксированная ширина тела */
+      margin-left: auto; /* Центрирование тела по горизонтали */
+      margin-right: auto; /* Центрирование тела по горизонтали */
+    }
+    /* Стили для имитации keep-react */
+    .form-container {
+      max-width: 340px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #dfe6e9;
+      border-radius: 8px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px 10px 10px 40px;
+      border-radius: 4px;
+      border: 1px solid #dfe6e9;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #AFBACA;
+    }
+
+    .button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #0088cc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #006699;
+    }
+    /* Остальные стили... */
+  </style>
+</head>
+<body>
+
+  <!-- Форма -->
+  <div class="form-container">
+    <form action="/additem" method="post">
+      <div class="input-group">
+        <input type="text" name="from" placeholder="Откуда" required>
+        <span class="input-icon">📧</span> <!-- Используйте соответствующую иконку -->
+      </div>
+      <!-- Повторите для каждого поля ввода -->
+      <button class="button" type="submit">Отправить</button>
+    </form>
+  </div>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Форма отправки данных о грузоперевозках</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Общие стили CSS */
+    body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #dfe0e0; /* Фоновый цвет, как в Telegram */
+  color: #2c3e50; /* Цвет текста */
+  margin: 0;
+  padding: 20px;
+  width: 340px; /* Фиксированная ширина тела */
+  margin-left: auto; /* Центрирование тела по горизонтали */
+  margin-right: auto; /* Центрирование тела по горизонтали */
+  border: 1px solid #8f8f8f; /* Добавляем рамку */
+}
+    form {
+      background-color: #fff;
+      padding: 20px;
+      max-width: 100%; /* Максимальная ширина формы для всех устройств */
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    input, textarea, button, select {
+      margin-bottom: 10px;
+      border-radius: 4px;
+      border: 1px solid #dfe6e9;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box; /* Добавляет padding в общую ширину элемента */
+    }
+    button {
+      background-color: #0088cc; /* Синяя кнопка, как в Telegram */
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #006699;
+    }
+    .message {
+      border: 1px solid #8f8f8f;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+    /* Стили для карусели */
+.carousel {
+  position: relative;
+  max-width: 600px;
+  margin: auto;
+  overflow: hidden;
+}
+
+.carousel-images img {
+  width: 100%;
+  display: none;
+}
+
+.carousel-images img:first-child {
+  display: block;
+}
+
+button.prev,
+button.next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+button.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+button.prev:hover,
+button.next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
+    .modal {
+  display: none;
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="carousel">
+    <div class="carousel-images">
+      <img src="5d9b43c0-51f6-4cd9-be6a-7f89fcd5bf5a-5220196.jpeg" alt="Изображение 1">
+      <img src="8d9a7048-0054-4057-aac5-f64feb14b997-5220194.jpeg" alt="Изображение 2">
+      <img src="9c26d898-dc5d-4b88-8361-4f86466aaf12-5220186.jpeg" alt="Изображение 3">
+      <img src="e98aefe3-723a-457d-98c0-f15634b3ecf4-5220185.jpeg" alt="Изображение 4">
+    </div>
+  </div>
+
+
+
+
+<!-- Кнопка для открытия всплывающего окна -->
+<button id="myBtn">Добавить заказ</button>
+
+<!-- Всплывающее окно -->
+<div id="myModal" class="modal">
+
+  <!-- Содержимое всплывающего окна -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <!-- Форма -->
+    <form action="/additem" method="post">
+      <select name="role" required>
+        <option value="Отправлю">Отправить</option>
+        <option value="Увезу">Увезти</option>
+      </select>
+      <input type="text" name="from" placeholder="Откуда" required>
+      <input type="text" name="to" placeholder="Куда" required>
+      <input type="date" name="date" required>
+      <input type="number" name="price" placeholder="Цена" required>
+      <input type="number" name="weight" placeholder="Вес" required>
+      <input type="text" name="contact" placeholder="Контакт" required>
+      <textarea name="message" placeholder="Сообщение"></textarea>
+      <button type="submit">Отправить</button>
+    </form>
+  </div>
+
+</div>
+
+<!-- Контейнер для отображения данных в виде сообщений -->
+<div id="itemsContainer"></div>
+  
+  <script>
+  // Скрипт для загрузки данных и отображения в виде сообщений
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/items')
+      .then(response => response.json())
+      .then(items => {
+        const itemsContainer = document.getElementById('itemsContainer');
+        items.forEach(item => {
+          let message = document.createElement('div');
+          message.classList.add('message');
+          message.textContent = `${item.role} из ${item.from} в ${item.to}  ${new Date(item.date).toLocaleDateString()} за ${item.price} вес ${item.weight} ${item.contact} ${item.message}`;
+          itemsContainer.appendChild(message);
+        });
+      })
+      .catch(error => console.error('Ошибка:', error));
+  });
+  
+  // Скрипт для управления всплывающим окном
+  var modal = document.getElementById('myModal');
+  var btn = document.getElementById('myBtn');
+  var span = document.getElementsByClassName('close')[0];
+
+  btn.onclick = function() {
+    modal.style.display = "block";
+  }
+
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+
+// JavaScript для управления каруселью
+let slideIndex = 0;
+showSlides(slideIndex);
+
+// Добавляем функцию showSlides
+function showSlides() {
+  let slides = document.querySelectorAll('.carousel-images img');
+  for (let i = 0; i < slides.length; i++) {
+    slides[i].style.display = 'none';  
+  }
+  slideIndex++;
+  if (slideIndex > slides.length) {slideIndex = 1}    
+  slides[slideIndex-1].style.display = 'block';
+  // Смена слайда каждые 5 секунд
+  setTimeout(showSlides, 5000);
+}
+
+// Функция moveSlide изменена для совместимости с showSlides
+function moveSlide(step) {
+  slideIndex += step - 1;
+  if (slideIndex < 0) {slideIndex = slides.length - 1}
+  if (slideIndex >= slides.length) {slideIndex = 0}
+  showSlides();
+}
+  </script>
+
+</body>
+</html>
